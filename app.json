@@ -8,9 +8,11 @@
     "scheme": "mymobileapp",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.vendor.mobile",
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.vendor.mobile",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -32,7 +34,10 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      "@clerk/expo",
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
