@@ -1,16 +1,18 @@
-import { Link } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import Input from "@/features/todos/components/Input";
+import TodoList from "@/features/todos/components/TodoList";
+import useTodos from "@/features/todos/hooks/useTodos";
 
 const App = () => {
+  const { todos, handleToggle, deleteTodo } = useTodos();
   return (
-    <View>
-      Hello
-      <Link href={"/home"}>
-        <Pressable>
-          <Text>Home page</Text>
-        </Pressable>
-      </Link>
-    </View>
+    <>
+      <Input />
+      <TodoList
+        todos={todos}
+        onToggleTodo={handleToggle}
+        onDeleteTodo={deleteTodo}
+      />
+    </>
   );
 };
 

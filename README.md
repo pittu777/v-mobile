@@ -63,3 +63,6 @@ npm install -D tailwindcss@^3.4.17
 npx tailwindcss init
 
 npx expo customize metro.config.js
+
+<!--
+styles apply to file that are mentioned inside tailwind config -->
