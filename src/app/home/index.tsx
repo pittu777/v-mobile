@@ -1,7 +1,1 @@
-import { Text } from "react-native";
-
-const Home = () => {
-  return <Text>Hello welcome to home</Text>;
-};
-
-export default Home;
+export { default } from '@/features/todos/components/TodoScreen';
