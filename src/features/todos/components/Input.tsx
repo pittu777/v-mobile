@@ -3,11 +3,19 @@ import { Input as InputShadeCn } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { useState } from "react";
 import { View } from "react-native";
-import useTodos from "../hooks/useTodos";
 
-const Input = () => {
+type Props = {
+  onAddTodo: (title: string) => Promise<boolean>;
+  saving: boolean;
+};
+
+const Input = ({ onAddTodo, saving }: Props) => {
   const [text, setText] = useState("");
-  const { addTodo } = useTodos();
+  const submitTodo = async () => {
+    const title = text.trim();
+    if (!title || saving) return;
+    if (await onAddTodo(title)) setText("");
+  };
   return (
     // 🚀 Cleaned up to explicitly supported core colors
     <View className="flex justify-start px-6">
@@ -23,6 +31,9 @@ const Input = () => {
             placeholder="Enter Todo"
             value={text}
             onChangeText={setText}
+            onSubmitEditing={() => void submitTodo()}
+            returnKeyType="done"
+            accessibilityLabel="New todo"
           />
         </View>
 
@@ -30,10 +41,12 @@ const Input = () => {
           <Button
             variant="default"
             className="px-0"
-            onPress={() => addTodo(text)}
+            onPress={() => void submitTodo()}
+            disabled={!text.trim() || saving}
+            accessibilityLabel="Add todo"
           >
             <Text className="text-primary-foreground font-medium">
-              Add todo
+              {saving ? "Adding…" : "Add todo"}
             </Text>
           </Button>
         </View>
