@@ -42,8 +42,23 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true,
-      // 🚀 Add this line to enforce lazy code compilation for web components
       "onDemandFilesystem": true
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "8fc1ab87-833d-4f65-97f0-e3df445e594a"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8fc1ab87-833d-4f65-97f0-e3df445e594a"
     }
   }
 }
