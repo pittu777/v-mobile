@@ -1,1 +1,7 @@
-export { default } from '@/features/todos/components/TodoScreen';
+import { Redirect } from "expo-router";
+
+const Index = () => {
+  return <Redirect href={"/(tabs)/todos"} />;
+};
+
+export default Index;
