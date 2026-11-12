@@ -4,63 +4,66 @@
 
 ## Platform
 
-web
+adaptive
 
 ## Stack
-Nativewind + shadcn/ui components, built with React Native 0.88.1, TypeScript, Tailwind CSS v4. Prefer recommended Expo modules over third-party libraries. Existing codebase already answers this (see `src/components/ui/`, `src/features/todos/`, `src/lib/utils.ts`, `src/app/_layout.tsx`).
+
+Expo SDK 58, React Native 0.88, TypeScript, Expo Router, NativeWind 4, Tailwind CSS 3, and Zustand. The app uses Expo Router native tabs and shared primitives under `src/components/ui/`. Feature code lives under `src/features/`.
 
 ## Users
 
-Primary users are daily commuters and students who need quick, distraction-free task tracking. They carry their tasks across phones, tablets, and browsers. They expect zero friction to add a task, see it instantly, and mark it done without opening another app.
+People who want a quick, low-distraction task list on an iOS or Android phone. They should be able to add a task, scan the list, and mark work complete with familiar native controls.
 
 ## Product Purpose
 
-Provide a single source of truth for personal tasks across all devices, backed by a MERN-style REST API. Enables offline-first usage while keeping remote sync automatic. Success = every task visible everywhere, always up-to-date, never lost.
+Provide API-backed todo tracking alongside a small shopping interface prototype. The app has Shop, Cart, Todos, Orders, and Profile destinations. Shop, Cart, Orders, and Profile currently use local mock data; they are visual prototypes and do not connect to commerce or profile services.
 
 ## Positioning
 
-Apple Reminders / Google Tasks / Todoist each require manual sync or multiple accounts. This app collapses them into one simple interface with one public API URL (`EXPO_PUBLIC_API_URL=https://mern-stack-todo-app-hsfm.onrender.com`). It positions itself as the "one app, one place, one number" for daily life.
+A calm, slate-themed daily task app with a storefront prototype in the same native tab interface. The shopping screens illustrate catalog browsing, a cart summary, order history, and profile settings. They do not represent live inventory, payment, or completed purchases.
 
 ## Operating Context
 
-- Target: **iOS and Android** with a unified, clean Nativewind design.
-- Routing: Expo Router file-based navigation under `src/app/` (every file there is a screen; `_layout.tsx` defines navigators).
-- Auth: Clerk (`@clerk/expo`, `@expo/auth-session`) — sign-in handled externally.
-- Dev command: `npx expo start`, `npx expo lint`, `npx tsc --noEmit`.
-- Build: development build via `eas build --profile development` if needed.
+- Target: iOS and Android phones, with platform-aware safe areas, status bars, native tab navigation, and comfortable touch targets.
+- Routing: Expo Router screens under `src/app/`; the five destinations are configured in `src/app/(tabs)/_layout.tsx`.
+- Root layout: `src/app/_layout.tsx` provides the safe-area context and system-aware status bar.
+- Todo data requires the configured `EXPO_PUBLIC_API_URL`. Commerce and profile data are local examples.
+- Development commands: `npx expo start`, `npx expo lint`, and `npx tsc --noEmit`.
 
 ## Capabilities and Constraints
 
-- Add a task (title), toggle completion, delete.
-- Local store via zustand; remote fetch on mount and interval.
-- Sync via `getTodos()`, `createTodo()`, `removeTodo(id)`, `updateTodoStatus(id, completed)`.
-- Environment variables required: `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`.
-- Data model: `{ _id, title, completed, createdAt?, updatedAt? }`.
+- Todos: create, complete, and delete tasks through the existing todo store, hooks, and REST API.
+- Shop: browse local sample products and filter the visible category.
+- Cart: display sample cart items and a mock order summary.
+- Orders: display sample order records and statuses.
+- Profile: display sample account details, summary values, and settings rows.
+- Only the Todos feature is connected to the configured API. The shopping and profile screens are presentation-only mock data.
+- Todo records use `{ _id, title, completed, createdAt?, updatedAt? }`.
 
 ## Brand Commitments
 
-Free to define. Proposed brand voice: **calm, efficient, distraction-free**. Clean typography hierarchy, generous whitespace, subtle glass/mask decoration, hard offset shadows (`box-shadow: 4px 4px 0`), monospace used sparingly for technical fields, Unicode glyphs/emoji drawn from `@rn-primitives/checkbox` family, light/dark picked by category (day commute = light, night commute = dark).
+Use a calm, efficient, distraction-free voice. Keep the slate neutrals, ink primary action, and coral destructive/error accent defined in `DESIGN.md`. Use the platform system font, clear hierarchy, restrained elevation, and Lucide icons. Keep sample commerce data visibly illustrative and avoid copy that implies a real purchase or account service.
 
 ## Evidence on Hand
 
-- Source code: `src/app/index.tsx`, `_layout.tsx`, `home/index.tsx`, todos feature (`useTodos`, `todoStore`, `todoApi`, `Input`, `Checkbox`, `Button`, `Text`, `TodoList`).
-- Tokens: HSL CSS variables in `global.css`; Tailwind config extends colors.
-- Assets: `assets/images/*` (icons, favicon, splash, badge).
-- No real data assets yet; API endpoint configured via env var.
-- No existing DESIGN.md or PRODUCT.md.
+- Routes: `src/app/(tabs)/shop/index.tsx`, `cart/index.tsx`, `todos/index.tsx`, `orders/index.tsx`, and `profile/index.tsx`.
+- Todo implementation: `src/features/todos/`, including its store, hooks, API client, and screen components.
+- Mock commerce data: `src/features/shop/data/mockData.ts`; shared commerce screens are in `src/features/shop/components/`.
+- Theme tokens: `src/global.css`, `tailwind.config.js`, and `DESIGN.md`.
+- App imagery and icons: `assets/images/`; shop products use local iconography rather than product photography.
 
 ## Product Principles
 
-1. One tap to add a task — no multi-step wizard.
-2. Completion toggles instantly with smooth ease-out animation.
-3. Empty states guide the user ("No todos yet") with a friendly prompt.
-4. Dark mode follows the same token set as light mode.
-5. Keep the UI lean: tight groups, generous separation above headings, 0.5rem radius, hard shadow offsets.
+1. Make adding and completing a task direct and predictable.
+2. Keep the five tab destinations easy to scan and reach.
+3. Use useful loading, error, and empty states where data can be absent or unavailable.
+4. Treat mock Shop, Cart, Orders, and Profile content as sample presentation data.
+5. Keep light and dark themes aligned through the shared semantic token set.
 
 ## Accessibility & Inclusion
 
-- All interactive elements have `accessibilityLabel` (e.g., "New todo", "Mark X complete", "Delete Y").
-- Focus rings: `focus-visible:ring-[3px]` on buttons/inputs.
-- Contrast tokens from global CSS satisfy ≥4.5:1 body text, ≥3:1 large text.
-- Keyboard focus works via `Pressable` + `role="button"`.
-- Screen-reader-friendly list items via `ListEmptyComponent`.
+- Provide at least 44pt iOS and 48dp Android touch targets for interactive controls.
+- Respect safe areas, system text scaling, and platform navigation conventions.
+- Give icon-only actions accessible labels and expose task completion state to screen readers.
+- Maintain readable text and control contrast in both themes.
+- Ensure long task titles, product names, and user text can wrap without clipping.

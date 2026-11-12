@@ -12,7 +12,7 @@ function Input({
   return (
     <TextInput
       className={cn(
-        "border-input bg-background text-foreground flex h-11 w-full min-w-0 flex-row items-center rounded-md border px-3 text-base shadow-sm shadow-black/5",
+        "border-input bg-background text-foreground flex min-h-12 w-full min-w-0 flex-row items-center rounded-md border px-3 py-3 text-base shadow-sm shadow-black/5",
         focused && "border-ring",
         props.editable === false &&
           cn(

@@ -4,7 +4,7 @@ import * as CheckboxPrimitive from '@rn-primitives/checkbox';
 import { Check } from 'lucide-react-native';
 import { Platform } from 'react-native';
 
-const DEFAULT_HIT_SLOP = 14;
+const DEFAULT_HIT_SLOP = 16;
 
 function Checkbox({
   className,

@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import Input from "@/features/todos/components/Input";
 import TodoList from "@/features/todos/components/TodoList";
 import useTodos from "@/features/todos/hooks/useTodos";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CircleAlert } from "lucide-react-native";
 
 const TodoScreen = () => {
   const {
@@ -28,7 +30,8 @@ const TodoScreen = () => {
           <Input onAddTodo={addTodo} saving={saving} />
           {error ? (
             <View className="mx-4 mt-4 flex-row items-center justify-between gap-3 rounded-md bg-destructive/10 p-3">
-              <Text className="flex-1 text-body text-destructive">{error}</Text>
+              <Icon as={CircleAlert} size={20} className="text-destructive" />
+              <Text className="flex-1 text-body text-foreground">{error}</Text>
               {!todos.length && !loading ? (
                 <Button
                   variant="outline"

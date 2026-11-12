@@ -71,7 +71,7 @@ components:
     textColor: "{colors.ink-foreground}"
     rounded: "{rounded.md}"
     padding: "8px 16px"
-    height: "40px"
+    height: "48px"
   button-primary-hover:
     backgroundColor: "oklch(12% 0.01 240)"
     textColor: "{colors.ink-foreground}"
@@ -82,7 +82,7 @@ components:
     textColor: "{colors.coral-foreground}"
     rounded: "{rounded.md}"
     padding: "8px 16px"
-    height: "40px"
+    height: "48px"
   button-destructive-hover:
     backgroundColor: "oklch(55% 0.25 20)"
   button-outline:
@@ -90,20 +90,20 @@ components:
     textColor: "{colors.surface-foreground}"
     rounded: "{rounded.md}"
     padding: "8px 16px"
-    height: "40px"
+    height: "48px"
     border: "1px solid {colors.border}"
   button-ghost:
     backgroundColor: "transparent"
     textColor: "{colors.surface-foreground}"
     rounded: "{rounded.md}"
     padding: "8px 16px"
-    height: "40px"
+    height: "48px"
   input-field:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.text}"
     rounded: "{rounded.md}"
     padding: "8px 12px"
-    height: "40px"
+    height: "48px"
     border: "1px solid {colors.input-border}"
   input-field-focus:
     border: "1px solid {colors.focus-ring}"
@@ -125,11 +125,11 @@ components:
 
 **Creative North Star: "The Daily Slate"**
 
-A quiet, near-monochrome system built for commuters and students who need to capture tasks instantly — on a crowded train, between classes, while walking. The palette is intentionally restrained: slate neutrals, one decisive ink accent, one coral alarm. No gradients, no glassmorphism, no decorative flair. Depth comes from a single shadow vocabulary (`shadow-sm shadow-black/5`) and the hard offset (`4px 4px 0`) on elevated cards — a tactile nudge that says "this surface is actionable." Typography uses the platform system stack at every size; no custom font to load, no flash of unstyled text. The experience is "open, type, done" — zero friction, zero distraction, zero learning curve.
+A quiet, near-monochrome system for capturing tasks and browsing a small storefront prototype on iOS and Android. The palette is intentionally restrained: slate neutrals, one decisive ink accent, and one coral destructive/error accent. No gradients or decorative glass effects. Surfaces rely on clear borders and subtle ambient depth. Typography uses the platform system font and respects system text scaling. The experience should feel direct, legible, and at home on both platforms.
 
 **Key Characteristics:**
 - Near-monochrome slate scale with one ink accent and one coral destructive
-- Hard offset shadows (`4px 4px 0`) on interactive cards; ambient `shadow-sm` everywhere else
+- Subtle ambient shadow only where it helps separate a control from the page
 - Platform system font stack — instant, native, no layout shift
 - 8px radius (`rounded-md`) as the single corner language
 - Dark mode is a first-class inversion, not an afterthought
@@ -188,11 +188,11 @@ The palette is a two-tone slate system (light / dark) with two semantic accents:
 
 ## Layout
 
-Single-column mobile-first. A 16px (`px-4` / `px-6`) horizontal gutter frames all content. Vertical rhythm follows a 8px base unit: `gap-2` (8px) between tight groups (checkbox + label), `gap-3` (12px) between form fields, `mt-4` (16px) / `mt-6` (24px) above headings, `mb-3` (12px) between list items.
+Single-column mobile-first. A 16px (`px-4` / `px-6`) horizontal gutter frames all content. Vertical rhythm follows an 8px base unit: `gap-2` (8px) between tight groups, `gap-3` (12px) between form fields, and 16–24px above headings. Keep product, cart, order, and profile content in readable single-column rows.
 
 **Container behavior:** Full-width on mobile (<640px), max-width 480px centered on tablet/desktop. No multi-column grids in this app.
 
-**Density:** Compact by default — `p-3` (12px) inside list items, `h-10` (40px) touch targets. No spacious "desktop density" variant; the app is mobile-native first.
+**Density:** Compact but touch-friendly. Interactive controls have at least 48dp height/width to meet Android touch guidance and exceed the 44pt iOS minimum. Content rows may be shorter when the row itself is not interactive. No spacious desktop density variant; the app is mobile-native first.
 
 **Responsive changes:** Only the container max-width and horizontal padding shift. Typography scale, spacing rhythm, and component sizes stay identical.
 
@@ -228,7 +228,7 @@ One corner language: **8px radius** (`rounded-md`, `--radius: 0.5rem`). Applied 
 ## Components
 
 ### Buttons
-- **Shape:** 8px radius, 40px height (default), 36px (sm), 44px (lg), 40px×40px (icon).
+- **Shape:** 8px radius. Default, compact, and icon buttons preserve a 48dp minimum touch target; larger actions may grow to 52dp. Let labels wrap or scale with system text settings.
 - **Primary:** Ink background, ink-foreground text, ambient shadow. Hover/active: 10% darker ink.
 - **Destructive:** Coral background, coral-foreground text, ambient shadow. Hover: 10% darker coral.
 - **Outline:** Transparent background, surface-foreground text, 1px border stroke. Hover: surface background.
@@ -238,7 +238,7 @@ One corner language: **8px radius** (`rounded-md`, `--radius: 0.5rem`). Applied 
 - **Disabled:** 50% opacity, pointer-events-none.
 
 ### Inputs / Fields
-- **Style:** 8px radius, 40px height, 1px border stroke, 12px horizontal padding, ambient shadow.
+- **Style:** 8px radius, 48dp minimum height, 1px border stroke, 12px horizontal padding, ambient shadow.
 - **Focus:** Border shifts to focus-ring; 3px ring at 50% opacity.
 - **Error:** Border + ring shift to coral.
 - **Disabled:** 50% opacity, not-allowed cursor.
@@ -246,14 +246,22 @@ One corner language: **8px radius** (`rounded-md`, `--radius: 0.5rem`). Applied 
 
 ### Checkboxes
 - **Shape:** 16px square, 4px radius, 1px border stroke, ambient shadow.
-- **Checked:** Ink background + border, white check icon (12px, stroke 2.5 web / 3.5 native).
+  - **Checked:** Ink background + border, white check icon (12px, native stroke weight).
 - **Focus:** 3px ring at focus-ring 50% opacity.
-- **Hit slop:** 24px (generous touch target).
+- **Hit slop:** Extend the 16px visual control to at least a 48dp touch target.
 
 ### Lists / Todo Items
 - **Shape:** Full-width row, 12px vertical padding, 16px horizontal padding, 1px border stroke, Paper background, Ambient Low shadow.
 - **Content:** Checkbox (left), title text (flex-1, line-through when completed), Destructive Delete button (right, sm size).
 - **Empty state:** Centered muted text "No todos yet. Add one above." with loading spinner when fetching.
+
+### Shop, Cart, Orders, and Profile
+- **Data:** These screens use local mock data; do not imply live inventory, payment, order processing, or account services.
+- **Shop:** Search and category controls sit above a single-column product list with clear product name, category, and price hierarchy.
+- **Cart:** Keep item rows scannable and the mock subtotal/summary visually distinct from the item list.
+- **Orders:** Group sample order details and status so each record can be scanned quickly.
+- **Profile:** Use concise settings rows with clear labels and consistent icon alignment.
+- **Navigation:** Keep the five top-level destinations visible in the native tab bar. Preserve platform safe areas and native tab behavior.
 
 ### Typography Components (from Text primitive)
 - **Display (h1):** Centered, 36px, 800 weight, tight tracking.
@@ -267,10 +275,10 @@ One corner language: **8px radius** (`rounded-md`, `--radius: 0.5rem`). Applied 
 
 ### Do:
 - **Do** use Ink for exactly one primary action per screen.
-- **Do** apply the Hard Offset shadow (`4px 4px 0`) only to todo list items.
+- **Do** use subtle ambient depth sparingly and consistently.
 - **Do** keep all radii at 8px (4px for checkboxes).
 - **Do** use the system font stack at every size.
-- **Do** maintain 40px minimum touch targets.
+- **Do** maintain 48dp Android and 44pt iOS minimum touch targets.
 - **Do** provide 3px focus rings on every interactive element.
 - **Do** invert the full token set for dark mode via CSS custom properties.
 

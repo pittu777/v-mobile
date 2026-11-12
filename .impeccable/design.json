@@ -114,9 +114,8 @@
         "textColor": "#FAFAFA",
         "rounded": "0.5rem",
         "padding": "8px 16px",
-        "height": "40px",
-        "heightSm": "36px",
-        "heightLg": "44px",
+        "minHeight": "48px",
+        "minHeightLg": "52px",
         "icon": "false"
       },
       "buttonPrimaryHover": {
@@ -132,27 +131,27 @@
         "textColor": "#FAFAFA",
         "rounded": "0.5rem",
         "padding": "8px 16px",
-        "height": "40px",
+        "minHeight": "48px",
         "icon": "false"
       },
       "buttonOutline": {
         "backgroundColor": "transparent",
-        "textColor": "#27272A",
+        "textColor": "#18181B",
         "rounded": "0.5rem",
         "padding": "8px 16px",
-        "height": "40px",
-        "border": "1px solid #27272A"
+        "minHeight": "48px",
+        "border": "1px solid #E4E4E7"
       },
       "buttonGhost": {
         "backgroundColor": "transparent",
-        "textColor": "#27272A",
+        "textColor": "#18181B",
         "rounded": "0.5rem",
         "padding": "8px 16px",
-        "height": "40px",
-        "border": "1px solid #27272A"
+        "minHeight": "48px",
+        "border": "none"
       },
       "inputField": {
-        "backgroundColor": "#F4F4F5",
+        "backgroundColor": "#FFFFFF",
         "textColor": "#09090B",
         "rounded": "0.5rem",
         "padding": "8px 12px",
@@ -161,20 +160,37 @@
         "width": "100%"
       },
       "checkbox": {
-        "backgroundColor": "#F4F4F5",
+        "backgroundColor": "#FFFFFF",
         "border": "1px solid #E4E4E7",
         "rounded": "0.25rem",
         "size": "16px",
-        "height": "40px",
-        "width": "100%"
+        "visualSize": "16px",
+        "hitTarget": "48dp"
       },
       "listItem": {
         "backgroundColor": "#F4F4F5",
         "border": "1px solid #E4E4E7",
         "padding": "12px",
-        "height": "40px",
+        "minHeight": "48px",
         "borderRadius": "0.25rem",
         "shadow": "shadow-sm"
+      },
+      "shopProductRow": {
+        "layout": "single-column list row",
+        "surface": "card",
+        "mockData": true
+      },
+      "cartItemRow": {
+        "layout": "single-column list row",
+        "mockData": true
+      },
+      "orderRecord": {
+        "layout": "scannable order summary and status",
+        "mockData": true
+      },
+      "profileSettingsRow": {
+        "layout": "icon, label, and trailing affordance",
+        "mockData": true
       }
     }
   }

@@ -50,7 +50,7 @@ const Shop = () => {
               >
                 <Icon as={ShoppingCart} size={20} />
               </Button>
-              <View className="absolute -right-1 -top-1 min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1">
+              <View className="absolute -right-1 -top-1 min-h-6 min-w-6 items-center justify-center rounded-md bg-primary px-1">
                 <Text className="text-[11px] font-medium text-primary-foreground">
                   2
                 </Text>
@@ -84,7 +84,7 @@ const Shop = () => {
                   onPress={() => setSelectedCategory(category)}
                   accessibilityRole="button"
                   accessibilityState={{ selected }}
-                  className={`h-11 min-w-11 items-center justify-center rounded-md border px-4 ${
+                  className={`min-h-12 min-w-12 items-center justify-center rounded-md border px-4 py-3 ${
                     selected
                       ? 'border-primary bg-primary'
                       : 'border-border bg-background active:bg-accent'

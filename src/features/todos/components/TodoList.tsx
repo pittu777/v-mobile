@@ -23,7 +23,7 @@ function TodoSkeleton() {
         >
           <View className="size-4 rounded-[4px] bg-muted" />
           <View className="h-4 flex-1 rounded-sm bg-muted" />
-          <View className="h-11 w-[72px] rounded-md bg-muted" />
+          <View className="min-h-12 w-[88px] rounded-md bg-muted" />
         </View>
       ))}
     </View>
