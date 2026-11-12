@@ -1,50 +1,22 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { NativeTabs } from "expo-router/native-tabs";
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen
-        name="shop"
-        options={{
-          title: "Shop",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="storefront-outline"
-              color={color as string}
-              size={size}
-            />
-          ),
-        }}
-      />
+    <NativeTabs>
+      <NativeTabs.Trigger name="shop">
+        <NativeTabs.Trigger.Icon sf="storefront" md="storefront" />
+        <NativeTabs.Trigger.Label>Shop</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
 
-      <Tabs.Screen
-        name="todos"
-        options={{
-          title: "Todos",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="checkbox-outline"
-              color={color as string}
-              size={size}
-            />
-          ),
-        }}
-      />
+      <NativeTabs.Trigger name="todos">
+        <NativeTabs.Trigger.Icon sf="checkmark.square" md="check_box" />
+        <NativeTabs.Trigger.Label>Todos</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
 
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="receipt-outline"
-              color={color as string}
-              size={size}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+      <NativeTabs.Trigger name="profile">
+        <NativeTabs.Trigger.Icon sf="person.crop.circle" md="person" />
+        <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }
