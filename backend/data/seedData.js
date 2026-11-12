@@ -1,7 +1,7 @@
 const products = [
   {
     id: "prod_1",
-    name: "Wireless noise-cancelling headphones",
+    name: "Wireless noise-cancelling headphone",
     category: "Electronics",
     price: 4999,
     rating: "4.8",
