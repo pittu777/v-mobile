@@ -2,16 +2,22 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
-import { categories, formatPrice, products } from '@/features/shop/data/mockData';
+import { categories, formatPrice } from '@/features/shop/data/mockData';
+import { getProducts } from '@/features/shop/shopApi';
+import { useRemoteData } from '@/features/shop/hooks/useRemoteData';
 import { Search, ShoppingCart, Star } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const EMPTY_PRODUCTS: Awaited<ReturnType<typeof getProducts>> = [];
+
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] =
     useState<(typeof categories)[number]>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const { data, loading, error, retry } = useRemoteData(getProducts);
+  const products = data ?? EMPTY_PRODUCTS;
 
   const visibleProducts = useMemo(
     () =>
@@ -23,7 +29,7 @@ const Shop = () => {
           .includes(searchQuery.trim().toLowerCase());
         return matchesCategory && matchesSearch;
       }),
-    [searchQuery, selectedCategory],
+    [products, searchQuery, selectedCategory],
   );
 
   return (
@@ -109,6 +115,18 @@ const Shop = () => {
             <Text variant="muted">{visibleProducts.length} items</Text>
           </View>
 
+          {loading ? (
+            <Text variant="muted">Loading products…</Text>
+          ) : null}
+          {error ? (
+            <View className="gap-3 rounded-md bg-destructive/10 p-4">
+              <Text className="text-body text-foreground">{error}</Text>
+              <Button variant="outline" onPress={retry} accessibilityLabel="Retry loading products">
+                <Text>Retry</Text>
+              </Button>
+            </View>
+          ) : null}
+
           <View className="gap-3">
             {visibleProducts.map((product) => (
               <View
@@ -152,7 +170,7 @@ const Shop = () => {
             ))}
           </View>
 
-          {visibleProducts.length === 0 ? (
+          {!loading && !error && visibleProducts.length === 0 ? (
             <View className="items-center py-12">
               <Icon as={Search} size={28} className="text-muted-foreground" />
               <Text variant="title" className="mt-4 text-center">

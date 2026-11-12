@@ -1,17 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { cartItems, formatPrice } from '@/features/shop/data/mockData';
+import { formatPrice } from '@/features/shop/data/mockData';
+import { getCart } from '@/features/shop/shopApi';
+import { useRemoteData } from '@/features/shop/hooks/useRemoteData';
 import { ArrowRight, ShoppingBag } from 'lucide-react-native';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const subtotal = cartItems.reduce(
-  (total, item) => total + item.price * item.quantity,
-  0,
-);
+const CartScreen = () => {
+  const { data, loading, error, retry } = useRemoteData(getCart);
+  const items = data ?? [];
+  const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
 
-const CartScreen = () => (
+  return (
   <SafeAreaView className="flex-1 bg-background" edges={['top']}>
     <ScrollView
       className="flex-1"
@@ -23,14 +25,28 @@ const CartScreen = () => (
           <View>
             <Text variant="headline">Your cart</Text>
             <Text variant="muted" className="mt-1">
-              {cartItems.length} items saved for checkout
+              {items.length} items saved for checkout
             </Text>
           </View>
           <Icon as={ShoppingBag} size={22} className="mb-1 text-muted-foreground" />
         </View>
 
+        {loading ? <Text variant="muted" className="mt-6">Loading cart...</Text> : null}
+        {error ? (
+          <View className="mt-6 gap-3 rounded-md bg-destructive/10 p-4">
+            <Text className="text-body text-foreground">{error}</Text>
+            <Button variant="outline" onPress={retry} accessibilityLabel="Retry loading cart">
+              <Text>Retry</Text>
+            </Button>
+          </View>
+        ) : null}
+
+        {!loading && !error && items.length === 0 ? (
+          <Text variant="muted" className="mt-6">Your cart is empty.</Text>
+        ) : null}
+
         <View className="mt-6 gap-3">
-          {cartItems.map((item) => (
+          {items.map((item) => (
             <View
               key={item.id}
               className="flex-row items-center gap-4 rounded-md border border-border bg-card p-3 shadow-sm shadow-black/5"
@@ -56,7 +72,7 @@ const CartScreen = () => (
           ))}
         </View>
 
-        <View className="mt-6 rounded-md border border-border bg-card p-4">
+        {items.length > 0 ? <View className="mt-6 rounded-md border border-border bg-card p-4">
           <Text variant="title">Order summary</Text>
           <View className="mt-4 gap-3">
             <View className="flex-row justify-between">
@@ -73,15 +89,16 @@ const CartScreen = () => (
               <Text className="text-body font-semibold">{formatPrice(subtotal)}</Text>
             </View>
           </View>
-        </View>
+        </View> : null}
 
-        <Button className="mt-5 w-full" size="lg" accessibilityLabel="Continue to checkout">
+        <Button className="mt-5 w-full" size="lg" disabled={items.length === 0 || loading || Boolean(error)} accessibilityLabel="Continue to checkout">
           <Text>Continue to checkout</Text>
           <Icon as={ArrowRight} size={18} />
         </Button>
       </View>
     </ScrollView>
   </SafeAreaView>
-);
+  );
+};
 
 export default CartScreen;

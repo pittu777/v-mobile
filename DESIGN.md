@@ -256,7 +256,7 @@ One corner language: **8px radius** (`rounded-md`, `--radius: 0.5rem`). Applied 
 - **Empty state:** Centered muted text "No todos yet. Add one above." with loading spinner when fetching.
 
 ### Shop, Cart, Orders, and Profile
-- **Data:** These screens use local mock data; do not imply live inventory, payment, order processing, or account services.
+- **Data:** These screens fetch seeded, read-only sample data from the backend; do not imply live inventory, payment, order processing, or account services.
 - **Shop:** Search and category controls sit above a single-column product list with clear product name, category, and price hierarchy.
 - **Cart:** Keep item rows scannable and the mock subtotal/summary visually distinct from the item list.
 - **Orders:** Group sample order details and status so each record can be scanned quickly.

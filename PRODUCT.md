@@ -16,28 +16,30 @@ People who want a quick, low-distraction task list on an iOS or Android phone. T
 
 ## Product Purpose
 
-Provide API-backed todo tracking alongside a small shopping interface prototype. The app has Shop, Cart, Todos, Orders, and Profile destinations. Shop, Cart, Orders, and Profile currently use local mock data; they are visual prototypes and do not connect to commerce or profile services.
+Provide API-backed todo tracking alongside a small shopping interface prototype. The app has Shop, Cart, Todos, Orders, and Profile destinations. Shop, Cart, Orders, and Profile read sample data from seeded, read-only backend endpoints; they do not connect to live commerce or profile services.
 
 ## Positioning
 
-A calm, slate-themed daily task app with a storefront prototype in the same native tab interface. The shopping screens illustrate catalog browsing, a cart summary, order history, and profile settings. They do not represent live inventory, payment, or completed purchases.
+A calm, slate-themed daily task app with a storefront prototype in the same native tab interface. The shopping screens illustrate catalog browsing, a cart summary, order history, and profile settings using seeded sample responses. They do not represent live inventory, payment, or completed purchases.
 
 ## Operating Context
 
 - Target: iOS and Android phones, with platform-aware safe areas, status bars, native tab navigation, and comfortable touch targets.
 - Routing: Expo Router screens under `src/app/`; the five destinations are configured in `src/app/(tabs)/_layout.tsx`.
 - Root layout: `src/app/_layout.tsx` provides the safe-area context and system-aware status bar.
-- Todo data requires the configured `EXPO_PUBLIC_API_URL`. Commerce and profile data are local examples.
+- All API requests use the configured `EXPO_PUBLIC_API_URL`; the deployed backend must include the shop routes for those screens to load.
+- Todo data is stored through the existing MongoDB API. Shop, Cart, Orders, and Profile responses use read-only fixtures in `backend/data/seedData.js`.
 - Development commands: `npx expo start`, `npx expo lint`, and `npx tsc --noEmit`.
 
 ## Capabilities and Constraints
 
 - Todos: create, complete, and delete tasks through the existing todo store, hooks, and REST API.
-- Shop: browse local sample products and filter the visible category.
-- Cart: display sample cart items and a mock order summary.
-- Orders: display sample order records and statuses.
-- Profile: display sample account details, summary values, and settings rows.
-- Only the Todos feature is connected to the configured API. The shopping and profile screens are presentation-only mock data.
+- Shop: fetch sample products from the backend and filter the visible category.
+- Cart: fetch sample cart items and display an order summary.
+- Orders: fetch sample order records and statuses.
+- Profile: fetch sample account details, summary values, and display settings rows.
+- The commerce/profile endpoints are read-only fixtures; they do not create orders, update cart contents, or persist profile changes.
+- Todos use the existing MongoDB-backed API; commerce/profile data is served from seeded JavaScript fixtures.
 - Todo records use `{ _id, title, completed, createdAt?, updatedAt? }`.
 
 ## Brand Commitments
@@ -48,7 +50,8 @@ Use a calm, efficient, distraction-free voice. Keep the slate neutrals, ink prim
 
 - Routes: `src/app/(tabs)/shop/index.tsx`, `cart/index.tsx`, `todos/index.tsx`, `orders/index.tsx`, and `profile/index.tsx`.
 - Todo implementation: `src/features/todos/`, including its store, hooks, API client, and screen components.
-- Mock commerce data: `src/features/shop/data/mockData.ts`; shared commerce screens are in `src/features/shop/components/`.
+- Seeded commerce/profile data and endpoints: `backend/data/seedData.js`, `backend/controllers/shopController.js`, and `backend/routes/ShopRoute.js`.
+- Frontend commerce API client: `src/features/shop/shopApi.ts`; shared screens are in `src/features/shop/components/`.
 - Theme tokens: `src/global.css`, `tailwind.config.js`, and `DESIGN.md`.
 - App imagery and icons: `assets/images/`; shop products use local iconography rather than product photography.
 
