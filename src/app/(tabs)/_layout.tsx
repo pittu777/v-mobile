@@ -8,9 +8,19 @@ export default function TabLayout() {
         <NativeTabs.Trigger.Label>Shop</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
+      <NativeTabs.Trigger name="cart" accessibilityLabel="Shopping cart">
+        <NativeTabs.Trigger.Icon sf="cart" md="shopping_cart" />
+        <NativeTabs.Trigger.Label>Cart</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="todos">
         <NativeTabs.Trigger.Icon sf="checkmark.square" md="check_box" />
         <NativeTabs.Trigger.Label>Todos</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="orders">
+        <NativeTabs.Trigger.Icon sf="shippingbox" md="receipt_long" />
+        <NativeTabs.Trigger.Label>Orders</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="profile">

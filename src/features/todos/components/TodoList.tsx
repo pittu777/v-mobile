@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Icon } from '@/components/ui/icon';
-import { Text } from '@/components/ui/text';
-import { FlatList, View } from 'react-native';
-import { ListTodo } from 'lucide-react-native';
-import type { Todo } from '../todo';
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Icon } from "@/components/ui/icon";
+import { Text } from "@/components/ui/text";
+import { ListTodo } from "lucide-react-native";
+import { FlatList, View } from "react-native";
+import type { Todo } from "../todo";
 
 type Props = {
   todos: Todo[];
@@ -50,7 +50,7 @@ const TodoList = ({ todos, loading, onToggleTodo, onDeleteTodo }: Props) => {
       <FlatList
         data={todos}
         className="flex-1"
-        contentContainerClassName={todos.length === 0 ? 'flex-1' : 'pb-6'}
+        contentContainerClassName={todos.length === 0 ? "flex-1" : "pb-6"}
         keyExtractor={(item) => item._id}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
@@ -61,10 +61,10 @@ const TodoList = ({ todos, loading, onToggleTodo, onDeleteTodo }: Props) => {
               <Checkbox
                 checked={item.completed}
                 onCheckedChange={() => onToggleTodo(item._id)}
-                accessibilityLabel={`Mark ${item.title} ${item.completed ? 'incomplete' : 'complete'}`}
+                accessibilityLabel={`Mark ${item.title} ${item.completed ? "incomplete" : "complete"}`}
               />
               <Text
-                className={`min-w-0 flex-1 text-body ${item.completed ? 'text-muted-foreground line-through' : 'text-foreground'}`}
+                className={`min-w-0 flex-1 text-body ${item.completed ? "text-muted-foreground line-through" : "text-foreground"}`}
                 accessibilityRole="text"
               >
                 {item.title}
@@ -78,7 +78,7 @@ const TodoList = ({ todos, loading, onToggleTodo, onDeleteTodo }: Props) => {
               onPress={() => onDeleteTodo(item._id)}
               accessibilityLabel={`Delete ${item.title}`}
             >
-              <Text>Delete</Text>
+              <Text>Delete todo</Text>
             </Button>
           </View>
         )}

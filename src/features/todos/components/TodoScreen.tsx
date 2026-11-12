@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
-import { Text } from '@/components/ui/text';
-import Input from '@/features/todos/components/Input';
-import TodoList from '@/features/todos/components/TodoList';
-import useTodos from '@/features/todos/hooks/useTodos';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import Input from "@/features/todos/components/Input";
+import TodoList from "@/features/todos/components/TodoList";
+import useTodos from "@/features/todos/hooks/useTodos";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const TodoScreen = () => {
   const {
@@ -19,10 +19,10 @@ const TodoScreen = () => {
   } = useTodos();
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top", "bottom"]}>
       <KeyboardAvoidingView
         className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View className="w-full max-w-[512px] flex-1 self-center">
           <Input onAddTodo={addTodo} saving={saving} />
