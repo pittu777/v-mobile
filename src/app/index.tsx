@@ -1,7 +1,17 @@
-import { Redirect } from "expo-router";
+import { useEffect } from 'react';
+import { Redirect } from 'expo-router';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
-const Index = () => {
-  return <Redirect href={"/(tabs)/todos"} />;
-};
+export default function Index() {
+  const { isHydrated, accessToken, hydrate } = useAuth();
 
-export default Index;
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
+
+  if (!isHydrated) {
+    return null;
+  }
+
+  return <Redirect href={accessToken ? '/(tabs)/todos' : '/(auth)/signin'} />;
+}
