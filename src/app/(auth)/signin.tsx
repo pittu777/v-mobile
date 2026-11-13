@@ -4,7 +4,7 @@ import { Text } from '@/components/ui/text';
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router } from 'expo-router';
+import { Link, router, type Href } from 'expo-router';
 import { authApi } from '@/features/auth/api/authApi';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
@@ -81,8 +81,8 @@ export default function SigninScreen() {
             </Button>
 
             <View className="mt-4 flex-row items-center justify-center gap-2">
-              <Text variant="muted">Don't have an account?</Text>
-              <Link href="/(auth)/signup" className="text-primary">
+              <Text variant="muted">Don&apos;t have an account?</Text>
+              <Link href={'/(auth)/signup' as Href} className="text-primary">
                 <Text variant="label">Sign up</Text>
               </Link>
             </View>

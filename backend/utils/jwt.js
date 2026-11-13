@@ -63,4 +63,10 @@ const verifyAccessToken = (token) => {
   }
 };
 
-module.exports = { signAccessToken, verifyAccessToken, getTtlSeconds, DEFAULT_TTL_SECONDS };
+module.exports = {
+  signAccessToken,
+  verifyAccessToken,
+  getSecret,
+  getTtlSeconds,
+  DEFAULT_TTL_SECONDS,
+};

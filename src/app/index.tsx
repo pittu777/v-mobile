@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect, type Href } from 'expo-router';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
 export default function Index() {
@@ -8,5 +8,6 @@ export default function Index() {
     return null;
   }
 
-  return <Redirect href={accessToken ? '/(tabs)/todos' : '/(auth)/signin'} />;
+  const destination = accessToken ? '/(tabs)/todos' : '/(auth)/signin';
+  return <Redirect href={destination as Href} />;
 }

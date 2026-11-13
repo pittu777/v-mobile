@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import { ChevronRight, CircleHelp, LockKeyhole, LogOut, Bell, Package, UserRound } from 'lucide-react-native';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,7 +27,7 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     await clearAuth();
-    router.replace('/(auth)/signin');
+    router.replace('/(auth)/signin' as Href);
   };
 
   return (

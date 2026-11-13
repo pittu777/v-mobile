@@ -1,12 +1,12 @@
 import { NativeTabs } from "expo-router/native-tabs";
-import { Redirect } from "expo-router";
+import { Redirect, type Href } from "expo-router";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function TabLayout() {
   const { isHydrated, accessToken } = useAuth();
 
   if (!isHydrated) return null;
-  if (!accessToken) return <Redirect href="/(auth)/signin" />;
+  if (!accessToken) return <Redirect href={'/(auth)/signin' as Href} />;
 
   return (
     <NativeTabs>

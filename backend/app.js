@@ -8,6 +8,7 @@ const todoRoutes = require('./routes/TodoRoute');
 const shopRoutes = require('./routes/ShopRoute');
 const authRoutes = require('./routes/AuthRoute');
 const { notFoundHandler, errorHandler } = require('./middleware/errorMiddleware');
+const { getSecret } = require('./utils/jwt');
 
 const app = express();
 
@@ -51,6 +52,13 @@ const PORT = Number(process.env.PORT) || 3000;
 // Export the app so tests can exercise it with supertest; only listen when run
 // directly (`node app.js`), never on import.
 if (require.main === module) {
+  try {
+    getSecret();
+  } catch (error) {
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
+  }
+
   connectDB()
     .then(() => {
       app.listen(PORT, () => {
