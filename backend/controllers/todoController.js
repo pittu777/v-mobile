@@ -1,60 +1,86 @@
-const Todo = require("../models/todoModel");
+const Todo = require('../models/todoModel');
+const asyncHandler = require('../utils/asyncHandler');
+const { parseObjectId } = require('../utils/parseObjectId');
+const HttpError = require('../utils/HttpError');
+const { sendData, sendCreated, sendMessage } = require('../utils/respond');
 
+/**
+ * Todos CRUD.
+ *
+ * Two bugs from the previous version are fixed here:
+ *  1. `updateTodo` used to write `title: undefined` when the client sent only
+ *     `{ completed }` — which is exactly what the app does when toggling a
+ *     checkbox — so the save failed validation. The update body is now built
+ *     only from the keys the client actually provided.
+ *  2. Reads went through a bare `find()` and failed with a raw 500 carrying
+ *     the Mongo error message; errors now flow through the shared handler.
+ */
+const getTodos = asyncHandler(async (req, res) => {
+  const filter = {};
 
-const getTodos = async(req,res)=>{
-    try{
-        const todos = await Todo.find();
-        res.status(200).json(todos)
-    }catch(error){
-        res.status(500).json({message:error.message})
+  // `?completed=true|false` lets the app fetch only open (or only done) items.
+  if (typeof req.query.completed === 'string') {
+    if (req.query.completed !== 'true' && req.query.completed !== 'false') {
+      throw HttpError.badRequest('`completed` must be "true" or "false".');
     }
-};
-
-const createTodo = async (req, res) => {
-    try {
-      const { title } = req.body;
-      const todo = new Todo({ title });
-      await todo.save();
-      res.status(201).json(todo);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  };
-const deleteTodo = async(req,res)=>{
-  try{
-    const {id} = req.params;
-    const deletedTodo = await Todo.findByIdAndDelete(id);
-    if(!deletedTodo){
-      return res.status(404).json({message:"todo not found"})
-    }
-    res.status(200).json({message:"deleted successfully"})
-  }catch(error){
-    console.log("error while deleteing", error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    filter.completed = req.query.completed === 'true';
   }
-}
 
-const updateTodo = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, completed } = req.body;
+  const todos = await Todo.find(filter).sort({ createdAt: -1 });
+  return sendData(res, todos);
+});
 
-    const updatedTodo = await Todo.findByIdAndUpdate(
-      id,
-      { title, completed },
-      { new: true } // Return the updated document
-    );
+const createTodo = asyncHandler(async (req, res) => {
+  const title = typeof req.body?.title === 'string' ? req.body.title.trim() : '';
 
-    if (!updatedTodo) {
-      return res.status(404).json({ message: "Todo not found" });
-    }
-
-    res.status(200).json(updatedTodo);
-  } catch (error) {
-    console.log("Error while updating:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+  if (!title) throw HttpError.badRequest('A title is required.');
+  if (title.length > 200) {
+    throw HttpError.badRequest('A title must be at most 200 characters.');
   }
-};
 
+  const todo = await Todo.create({ title });
+  return sendCreated(res, todo, 'Todo created.');
+});
 
-module.exports = {getTodos,createTodo,deleteTodo, updateTodo};
+const updateTodo = asyncHandler(async (req, res) => {
+  const id = parseObjectId(req.params.id, 'Todo');
+
+  // Only apply the fields the client actually sent.
+  const updates = {};
+  if (req.body?.title !== undefined) {
+    const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';
+    if (!title) throw HttpError.badRequest('A title cannot be empty.');
+    if (title.length > 200) {
+      throw HttpError.badRequest('A title must be at most 200 characters.');
+    }
+    updates.title = title;
+  }
+  if (req.body?.completed !== undefined) {
+    if (typeof req.body.completed !== 'boolean') {
+      throw HttpError.badRequest('`completed` must be true or false.');
+    }
+    updates.completed = req.body.completed;
+  }
+
+  if (Object.keys(updates).length === 0) {
+    throw HttpError.badRequest('Provide a `title` or `completed` value to update.');
+  }
+
+  const todo = await Todo.findByIdAndUpdate(id, updates, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!todo) throw HttpError.notFound('Todo not found.');
+  return sendData(res, todo, 'Todo updated.');
+});
+
+const deleteTodo = asyncHandler(async (req, res) => {
+  const id = parseObjectId(req.params.id, 'Todo');
+  const todo = await Todo.findByIdAndDelete(id);
+
+  if (!todo) throw HttpError.notFound('Todo not found.');
+  return sendMessage(res, 'Todo deleted.');
+});
+
+module.exports = { getTodos, createTodo, updateTodo, deleteTodo };

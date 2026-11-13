@@ -1,10 +1,17 @@
-const { products, cart, orders, profile } = require("../data/seedData");
+const { products, cart, orders, profile } = require('../data/seedData');
+const asyncHandler = require('../utils/asyncHandler');
+const { sendData } = require('../utils/respond');
 
-const getProducts = (_req, res) => {
-  res.status(200).json(products);
-};
+/**
+ * Read-only commerce/profile fixtures.
+ *
+ * These endpoints exist so the Shop, Cart, Orders and Profile screens have
+ * something real to render without a commerce backend. They never mutate
+ * anything — the seed module is the only source of truth.
+ */
+const getProducts = asyncHandler(async (_req, res) => sendData(res, products));
 
-const getCart = (_req, res) => {
+const getCart = asyncHandler(async (_req, res) => {
   const items = cart
     .map(({ productId, quantity }) => {
       const product = products.find((item) => item.id === productId);
@@ -12,15 +19,11 @@ const getCart = (_req, res) => {
     })
     .filter(Boolean);
 
-  res.status(200).json(items);
-};
+  return sendData(res, items);
+});
 
-const getOrders = (_req, res) => {
-  res.status(200).json(orders);
-};
+const getOrders = asyncHandler(async (_req, res) => sendData(res, orders));
 
-const getProfile = (_req, res) => {
-  res.status(200).json(profile);
-};
+const getProfile = asyncHandler(async (_req, res) => sendData(res, profile));
 
 module.exports = { getProducts, getCart, getOrders, getProfile };
