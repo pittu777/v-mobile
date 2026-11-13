@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { authStorage } from '../authStorage';
-import { User } from '../api/authApi';
+import type { User } from '../api/authApi';
 
 type AuthState = {
   user: User | null;
@@ -23,16 +23,27 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   clearAuth: async () => {
-    await authStorage.clear();
-    set({ user: null, accessToken: null });
+    try {
+      await authStorage.clear();
+    } finally {
+      set({ user: null, accessToken: null });
+    }
   },
 
   hydrate: async () => {
-    const [token, user] = await Promise.all([
-      authStorage.getToken(),
-      authStorage.getUser(),
-    ]);
-    set({ accessToken: token, user, isHydrated: true });
+    try {
+      const [token, user] = await Promise.all([
+        authStorage.getToken(),
+        authStorage.getUser(),
+      ]);
+      if (!token || !user) {
+        set({ accessToken: null, user: null, isHydrated: true });
+        return;
+      }
+      set({ accessToken: token, user, isHydrated: true });
+    } catch {
+      set({ accessToken: null, user: null, isHydrated: true });
+    }
   },
 }));
 

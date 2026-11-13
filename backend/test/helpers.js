@@ -1,7 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test_secret_that_is_at_least_32_characters_long_000000';
 process.env.JWT_ISSUER = 'mymobileapp-api-test';
-process.env.APP_BASE_URL = 'http://localhost:8081';
 process.env.CORS_ORIGIN = '';
 
 const { MongoMemoryServer } = require('mongodb-memory-server');

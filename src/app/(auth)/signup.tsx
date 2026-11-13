@@ -4,10 +4,9 @@ import { Text } from '@/components/ui/text';
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { authApi } from '@/features/auth/api/authApi';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { Alert } from 'react-native';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -36,10 +35,10 @@ export default function SignupScreen() {
     setLoading(true);
     try {
       const { user, accessToken } = await authApi.signup(name.trim(), email.trim(), password, confirmPassword);
-      setAuth(user, accessToken);
-      router.replace('/(auth)/verify-email');
-    } catch (e: any) {
-      setError(e.message || 'Signup failed.');
+      await setAuth(user, accessToken);
+      router.replace('/(tabs)/todos');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Signup failed.');
     } finally {
       setLoading(false);
     }

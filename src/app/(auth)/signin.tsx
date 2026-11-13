@@ -21,18 +21,13 @@ export default function SigninScreen() {
       setError('Email and password are required.');
       return;
     }
-
     setLoading(true);
     try {
       const { user, accessToken } = await authApi.signin(email.trim(), password);
-      setAuth(user, accessToken);
-      if (!user.emailVerified) {
-        router.replace('/(auth)/verify-email');
-      } else {
-        router.replace('/(tabs)/todos');
-      }
-    } catch (e: any) {
-      setError(e.message || 'Sign in failed.');
+      await setAuth(user, accessToken);
+      router.replace('/(tabs)/todos');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Sign in failed.');
     } finally {
       setLoading(false);
     }
@@ -48,9 +43,7 @@ export default function SigninScreen() {
         >
           <View className="w-full max-w-[480px] self-center">
             <Text variant="headline" className="text-center">Welcome back</Text>
-            <Text variant="muted" className="mt-2 text-center">
-              Sign in to continue
-            </Text>
+            <Text variant="muted" className="mt-2 text-center">Sign in to continue</Text>
 
             {error ? (
               <View className="mt-6 gap-3 rounded-md bg-destructive/10 p-4">
@@ -94,9 +87,6 @@ export default function SigninScreen() {
               </Link>
             </View>
 
-            <Link href="/(auth)/forgot-password" className="mt-4 block text-center">
-              <Text variant="label" className="text-primary">Forgot password?</Text>
-            </Link>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

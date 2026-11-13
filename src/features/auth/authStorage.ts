@@ -10,7 +10,14 @@ export const authStorage = {
 
   getUser: async () => {
     const data = await SecureStore.getItemAsync(USER_KEY);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+
+    try {
+      return JSON.parse(data);
+    } catch {
+      await SecureStore.deleteItemAsync(USER_KEY);
+      return null;
+    }
   },
   setUser: (user: object) => SecureStore.setItemAsync(USER_KEY, JSON.stringify(user)),
   deleteUser: () => SecureStore.deleteItemAsync(USER_KEY),

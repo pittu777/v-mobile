@@ -10,15 +10,39 @@ const getApiUrl = () => {
   return apiUrl.replace(/\/$/, "");
 };
 
-export const getTodos = async (): Promise<Todo[]> => {
-  const response = await fetch(`${getApiUrl()}/api/todos`);
+type ApiEnvelope<T> = {
+  success: boolean;
+  data: T;
+  message?: string;
+};
 
-  if (!response.ok) {
-    throw new Error(`Could not load todos (${response.status}).`);
+const request = async <T>(path: string, options: RequestInit = {}): Promise<T> => {
+  const { headers, ...requestOptions } = options;
+  const response = await fetch(`${getApiUrl()}/api/${path}`, {
+    ...requestOptions,
+    headers: {
+      "Content-Type": "application/json",
+      ...headers,
+    },
+  });
+  const envelope = (await response.json().catch(() => ({}))) as Partial<
+    ApiEnvelope<T>
+  >;
+
+  if (!response.ok || envelope.success === false) {
+    throw new Error(envelope.message || `Request failed (${response.status}).`);
   }
 
-  const data: Todo[] = await response.json();
-  return data.map((todo) => ({
+  if (envelope.success !== true || !("data" in envelope)) {
+    throw new Error("The server returned an unexpected response.");
+  }
+
+  return envelope.data as T;
+};
+
+export const getTodos = async (): Promise<Todo[]> => {
+  const todos = await request<Todo[]>("todos");
+  return todos.map((todo) => ({
     _id: todo._id,
     title: todo.title,
     completed: todo.completed,
@@ -29,16 +53,10 @@ export const getTodos = async (): Promise<Todo[]> => {
 
 export const createTodo = async (title: string): Promise<Todo | null> => {
   try {
-    const response = await fetch(`${getApiUrl()}/api/create`, {
+    return await request<Todo>("todos", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ title }),
     });
-
-    if (!response.ok) throw new Error("Failed to create todo");
-    return await response.json(); // Returns the created todo with its MongoDB _id
   } catch (error) {
     console.error("API error adding todo:", error);
     return null;
@@ -46,11 +64,8 @@ export const createTodo = async (title: string): Promise<Todo | null> => {
 };
 export const removeTodo = async (id: string): Promise<boolean> => {
   try {
-    const response = await fetch(`${getApiUrl()}/api/todos/${id}`, {
-      method: "DELETE",
-    });
-
-    return response.ok;
+    await request<null>(`todos/${id}`, { method: "DELETE" });
+    return true;
   } catch (error) {
     console.error("API error deleting todo:", error);
     return false;
@@ -63,16 +78,10 @@ export const updateTodoStatus = async (
   completed: boolean,
 ): Promise<Todo | null> => {
   try {
-    const response = await fetch(`${getApiUrl()}/api/todos/${id}`, {
+    return await request<Todo>(`todos/${id}`, {
       method: "PUT", // or "PATCH" depending on your Express routing
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ completed }),
     });
-
-    if (!response.ok) throw new Error("Failed to update status");
-    return await response.json(); // Returns the updated todo object from MongoDB
   } catch (error) {
     console.error("API error toggling todo:", error);
     return null;

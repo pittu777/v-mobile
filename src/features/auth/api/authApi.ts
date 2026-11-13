@@ -5,20 +5,33 @@ const getApiUrl = () => {
   return apiUrl.replace(/\/$/, '');
 };
 
+type ApiEnvelope<T> = {
+  success: boolean;
+  data: T;
+  message?: string;
+};
+
 const request = async <T>(path: string, options: RequestInit = {}): Promise<T> => {
+  const { headers, ...requestOptions } = options;
   const res = await fetch(`${getApiUrl()}/api/${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
+    ...requestOptions,
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
   });
 
-  const data = await res.json().catch(() => ({}));
+  const envelope = (await res.json().catch(() => ({}))) as Partial<ApiEnvelope<T>>;
 
-  if (!res.ok) {
-    const msg = data?.message || `Request failed (${res.status})`;
-    throw new Error(msg);
+  if (!res.ok || envelope.success === false) {
+    throw new Error(envelope.message || `Request failed (${res.status})`);
   }
 
-  return data as T;
+  if (envelope.success !== true || !('data' in envelope)) {
+    throw new Error('The server returned an unexpected response.');
+  }
+
+  return envelope.data as T;
 };
 
 export type User = {
@@ -26,7 +39,6 @@ export type User = {
   name: string;
   email: string;
   role: string;
-  emailVerified: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -47,30 +59,6 @@ export const authApi = {
     request<AuthResponse>('auth/signin', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
-    }),
-
-  verifyEmail: (token: string) =>
-    request<{ user: User }>('auth/verify-email', {
-      method: 'POST',
-      body: JSON.stringify({ token }),
-    }),
-
-  resendVerification: (email: string) =>
-    request<{ message: string }>('auth/resend-verification', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-    }),
-
-  forgotPassword: (email: string) =>
-    request<{ message: string }>('auth/forgot-password', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-    }),
-
-  resetPassword: (token: string, password: string, confirmPassword: string) =>
-    request<AuthResponse>('auth/reset-password', {
-      method: 'POST',
-      body: JSON.stringify({ token, password, confirmPassword }),
     }),
 
   me: (accessToken: string) =>
